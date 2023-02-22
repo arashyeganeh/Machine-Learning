@@ -7,7 +7,6 @@
 	<img alt="pandas" src="https://img.shields.io/badge/-Pandas-fcdeef?logo=pandas&logoColor=E00484"/>
 	<img alt="Kaggle" src="https://img.shields.io/badge/-Kaggle-blue"/>
 </p>
-
 # Machine Learning
 
 ## Author
@@ -24,7 +23,7 @@ If you share my passion for cutting-edge technology and are interested in explor
     </tr>
     <tr>
     	<td>
-            My Linkedin
+            Linkedin profile
         </td>
         <td>
         	<a href="https://www.linkedin.com/in/arash-yeganeh/"><img alt="linkedin" src="https://img.shields.io/badge/-Linkedin-0077B5?logo=linkedin&logoColor=white"/>
@@ -33,7 +32,7 @@ If you share my passion for cutting-edge technology and are interested in explor
     </tr>
     <tr>
     	<td>
-        	My Github
+        	I have repositories on GitHub
         </td>
         <td>
         	<a href="https://github.com/arashyeganeh?tab=repositories"><img alt="github" src="https://img.shields.io/badge/-GitHub-272727?logo=github&logoColor=white"/></a>
@@ -41,7 +40,7 @@ If you share my passion for cutting-edge technology and are interested in explor
     </tr>
     <tr>
         <td>
-        	My Kaggle
+        	Kaggle profile
         </td>
         <td>
             <a href="https://www.kaggle.com/arashyeganeh"><img alt="kaggle" src="https://img.shields.io/badge/-Kaggle-blue?logo=kaggle&logoColor=white"/></a>
