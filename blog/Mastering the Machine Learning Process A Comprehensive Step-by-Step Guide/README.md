@@ -16,26 +16,8 @@ The process of data collection typically involves several steps, such as identif
 
 The quality and quantity of data collected are crucial for the success of a machine learning project. The data must be relevant, accurate, and comprehensive, and it should be collected in a way that preserves its integrity and consistency. Proper data collection is the foundation of any successful machine learning project and can make the difference between a model that works and one that fails.
 
-## Step2. Data Cleaning
-Data cleaning, also known as data cleansing or data scrubbing, is the process of identifying and correcting or removing errors, inconsistencies, and inaccuracies from a dataset. It is a crucial step in preparing data for machine learning applications because machine learning algorithms require clean, accurate, and consistent data to produce meaningful results.
+## Step2. Data Exploration
 
-The process of data cleaning involves several steps, including:
-
-* Identifying missing data: This involves identifying any missing values in the dataset and deciding how to handle them. The missing values can be either replaced with the mean or median value, or the entire row or column can be removed.
-
-* Removing duplicates: This involves identifying and removing any duplicate entries in the dataset.
-
-* Standardizing data: This involves converting data into a standard format to ensure consistency across the dataset. For example, converting all dates into the same format.
-
-* Correcting errors: This involves identifying and correcting any errors in the dataset. For example, correcting misspelled words or erroneous numerical values.
-
-* Handling outliers: This involves identifying and handling any outliers in the dataset. Outliers are data points that are significantly different from the other data points and can skew the results of the analysis.
-
-* Ensuring data consistency: This involves ensuring that the data is consistent across all fields and that there are no conflicts or discrepancies.
-
-Data cleaning is an iterative process that may need to be repeated multiple times until the data is clean and ready for use in machine learning applications. It is essential to ensure that the data is clean to avoid any negative impact on the accuracy and performance of the machine learning models.
-
-## Step3. Data Exploration
 Data exploration is the process of analyzing and understanding the characteristics and patterns of a dataset. It is a crucial step in preparing data for machine learning applications because it helps to identify relationships, trends, and patterns in the data that can be used to build more accurate and effective machine learning models.
 
 The process of data exploration involves several steps, including:
@@ -53,6 +35,26 @@ The process of data exploration involves several steps, including:
 * Identifying data quality issues: This involves identifying and addressing any issues with the data, such as missing values, outliers, or inconsistencies, that could affect the accuracy and effectiveness of the machine learning models.
 
 Data exploration is an iterative process that may need to be repeated multiple times as new insights and patterns are discovered. It is an essential step in the machine learning process that helps to ensure that the data is properly understood and prepared for use in building machine learning models.
+
+## Step3. Data Cleaning
+
+Data cleaning, also known as data cleansing or data scrubbing, is the process of identifying and correcting or removing errors, inconsistencies, and inaccuracies from a dataset. It is a crucial step in preparing data for machine learning applications because machine learning algorithms require clean, accurate, and consistent data to produce meaningful results.
+
+The process of data cleaning involves several steps, including:
+
+* Identifying missing data: This involves identifying any missing values in the dataset and deciding how to handle them. The missing values can be either replaced with the mean or median value, or the entire row or column can be removed.
+
+* Removing duplicates: This involves identifying and removing any duplicate entries in the dataset.
+
+* Standardizing data: This involves converting data into a standard format to ensure consistency across the dataset. For example, converting all dates into the same format.
+
+* Correcting errors: This involves identifying and correcting any errors in the dataset. For example, correcting misspelled words or erroneous numerical values.
+
+* Handling outliers: This involves identifying and handling any outliers in the dataset. Outliers are data points that are significantly different from the other data points and can skew the results of the analysis.
+
+* Ensuring data consistency: This involves ensuring that the data is consistent across all fields and that there are no conflicts or discrepancies.
+
+Data cleaning is an iterative process that may need to be repeated multiple times until the data is clean and ready for use in machine learning applications. It is essential to ensure that the data is clean to avoid any negative impact on the accuracy and performance of the machine learning models.
 
 ## Step4. Feature Engineering
 Feature engineering is the process of selecting and transforming features in a dataset to create new, more meaningful features that can improve the performance of machine learning models. The goal of feature engineering is to extract relevant information from the raw data and represent it in a way that is more useful for machine learning algorithms.
