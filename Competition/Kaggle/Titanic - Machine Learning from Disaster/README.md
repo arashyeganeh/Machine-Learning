@@ -6,7 +6,7 @@
     <img src="https://img.shields.io/badge/Pandas-696969?logo=pandas&logoColor=white">
     <img src="https://img.shields.io/badge/Accuracy-%200.8065%20-31bfe2">
 </p>
-# The Titanic Dataset: A Step-by-Step Guide to Predicting Survival | Jupyter-lab & python script | Kaggle | 💀 😀
+# The Titanic Dataset: A Step-by-Step Guide to Predicting Survival | Kaggle | 💀 😀
 
 In this project, we plan to build a model step by step to predict the life conditions of other passengers with the help of machine learning.
 
@@ -55,6 +55,26 @@ There is a file `train.csv` exist that includes 891 records (without features or
 `Child `= daughter, son, stepdaughter, stepson
 Some children travelled only with a nanny, therefore parch=0 for them.
 
+## Requirements
+
+* Install the last stable version of `Python`
+
+  [Download Python](https://www.python.org/downloads/)
+
+* Install `JupyterLab` (optional)
+
+  Scripts can be written in any IDE, but `JupyterLab ` makes it easier.
+
+  ```bash
+  pip install jupyterlab
+  ```
+
+* Install libraries required by this project using pip.
+
+  ```bash
+  pip install pandas seaborn scikit-learn lazypredict
+  ```
+
 ## Let's Do it 💪
 
 Continue step by step with me.
@@ -65,8 +85,6 @@ Data collection is the process of obtaining relevant data from various sources f
 
 👉 Link Download from Kaggle: [Link](https://www.kaggle.com/competitions/titanic/data?select=train.csv)
 
-
-
 > 📚 pandas: for data manipulation and analysis.
 
 ```python
@@ -75,13 +93,9 @@ train = pd.read_csv('train.csv')
 test = pd.read_csv('test.csv')
 ```
 
-
-
 ### Step2. Data Exploration
 
 Data exploration is the crucial step of analyzing and understanding a dataset to identify patterns, relationships, and trends. It involves summarizing, visualizing, feature engineering, hypothesis testing, and identifying data quality issues. This iterative process helps ensure the data is properly understood and prepared for building more accurate and effective machine learning models.
-
-
 
 By using `info()` I can find out how many columns there are, and what their data types are.
 
@@ -115,8 +129,6 @@ memory usage: 83.7+ KB
 
 There're 12 columns
 
-
-
 ❔ How many missing values are there in each column?
 
 ```python
@@ -141,8 +153,6 @@ dtype: int64
 
 The columns `Age`, `Cabin`, and `Mounted` have missing values.
 
-
-
 By using `head()` can see the top 5 first rows of data frame.
 
 ```python
@@ -153,7 +163,6 @@ train.head()
 
 ```python
 import seaborn as sns
-
 sns.countplot(x='Survived', data=train)
 ```
 
@@ -165,57 +174,77 @@ sns.countplot(x='Survived', hue='Sex', data=train)
 
 ![](img/countplot_survived_sex.PNG)
 
+| **Column**  | **Missing values** |                         **Describe**                         | Action |
+| :---------: | :----------------: | :----------------------------------------------------------: | :----: |
+| PassengerId |         0          |          It is not providing any useful information          |   👎    |
+|  Survived   |         0          |                              -                               |   ✔️    |
+|   Pclass    |         0          |                              -                               |   ✔️    |
+|    Name     |         0          |          It is not providing any useful information          |   👎    |
+|     Sex     |         0          | The values in this column are currently defined as strings and must be converted into a numerical format for the machine to analyze |   ⚠️    |
+|     Age     |        177         |                  it includes missing value                   |   ⚠️    |
+|    SibSp    |         0          |                              -                               |   ✔️    |
+|    Parch    |         0          |                              -                               |   ✔️    |
+|   Ticket    |         0          |          It is not providing any useful information          |   👎    |
+|    Fare     |         0          |                              -                               |   ✔️    |
+|    Cabin    |        687         | This column has the highest number of missing values in the dataset, and it cannot be correlated with any other features. |   👎    |
+|  Embarked   |         2          |          It is not providing any useful information          |   👎    |
 
+* 👎  `It means useless so will delete`
+* ✔️ `It means useful`
+* ⚠️ `It means Useful but data need to normalize`
 
 ### Step3. Data Cleaning
 
 Data cleaning is the process of identifying and correcting errors, inconsistencies, and inaccuracies in a dataset. It involves identifying missing data, removing duplicates, standardizing data, correcting errors, handling outliers, and ensuring data consistency. This iterative process is crucial for ensuring the accuracy and performance of machine learning models.
 
-
-
 ```python
-train_df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin'], axis=1, inplace=True)
+def DropUselessCol(df):
+    df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin', 'Embarked'], axis=1, inplace=True)
 
-train_df['Age'].fillna(train_df['Age'].mean(), inplace=True)
-train_df.dropna(inplace=True)
-
-sex = pd.get_dummies(train_df['Sex'], drop_first=True)
-embark = pd.get_dummies(train_df['Embarked'], drop_first=True)
-
-train_df.drop(['Sex', 'Embarked'], axis=1, inplace=True)
-train_df = pd.concat([train_df, sex, embark], axis=1)
+def FillnaAge(df):
+    df['Age'].fillna(df['Age'].mean(), inplace=True)
+    
+def CleanData(df):
+    DropUselessCol(df)
+    FillnaAge(df)
+    
+CleanData(train)
+train.head()
 ```
 
+![](img/data_cleaning.PNG)
 
-
-### Step4. Feature Engineering
+### Step4. Feature Engineering & Data Preprocessing
 
 Feature engineering is the process of selecting and transforming features in a dataset to create new, more meaningful features that improve the performance of machine learning models. This involves feature selection, extraction, scaling, encoding, and dimensionality reduction. It's an iterative process that can improve the accuracy and effectiveness of machine learning models.
 
+```python
+def convertToNumeric(df):
+    sex = pd.get_dummies(df['Sex'], drop_first=True)
+    df.drop(['Sex'], axis=1, inplace=True)
+    df = pd.concat([df, sex], axis=1)
 
-
-> 📚 matplotlib: for data visualization
-
+def castColToInt(df, name):
+    df[name] = df[name].astype(int)
+    
+def FeatureEngineering(df):
+    convertToNumeric(df)
+    castColToInt(df, 'Age')
+    castColToInt(df, 'Fare')
+    
+FeatureEngineering(train)
+print(train)
 ```
-import matplotlib.pyplot as plt
 
-sns.heatmap(train_df.corr(), annot=True)
-plt.show()
-```
+![](img/feature_engineering.PNG)
 
-
-
-### Step5. Data Preprocessing
-
-Data preprocessing involves cleaning, transforming, and preparing raw data for machine learning models. This includes removing noise, handling missing values, normalizing or scaling data, and transforming data into a format that can be used by machine learning algorithms. The process includes data cleaning, integration, transformation, reduction, and splitting. Proper data preprocessing is crucial for improving the quality and usability of data and for achieving better performance and accuracy in machine learning models.
-
-
-
-### Step6. Data Splitting
+### Step5. Data Splitting
 
 Data splitting is a crucial step in machine learning that divides the dataset into training and testing sets. The training set is used to train the model, and the testing set is used to evaluate its performance on new, unseen data. Common approaches include the hold-out method, cross-validation, and leave-one-out method. Data splitting should be done randomly and in a way that preserves the distribution of the data, which can be achieved by stratified sampling.
 
+![](img/data_spliting.png)
 
+![](img/data_spliting_train.png)
 
 > 📚 sklearn (scikit-learn): for machine learning algorithms
 
@@ -226,67 +255,79 @@ X = train_df.drop('Survived', axis=1)
 y = train_df['Survived']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
 ```
 
-
-
-
-
-
-
-### Step7. Model Selection
+### Step6. Model Selection
 
 Model selection is about selecting the best machine learning model for a problem, considering the model architecture, hyperparameters, and optimization algorithm. Different machine learning models, such as decision trees, support vector machines, and neural networks, have their strengths and weaknesses. Model selection involves defining the problem, selecting a performance metric, choosing candidate models, splitting the data, training and evaluating models, selecting the best model based on the validation set, fine-tuning the selected model, and optimizing its performance. It is crucial to choose a model that is suitable for the problem and can generalize well to new data.
 
-```
+[Documentation: lazypredict](https://lazypredict.readthedocs.io/en/latest/)
+
+### Step7. Model Training
+
+Model training is the process of adjusting a machine learning model's parameters to fit the training data and make predictions. It involves data preparation, model selection, initialization, training, validation, evaluation, and fine-tuning. The goal is to minimize the loss function and improve the model's ability to generalize to new data. Preprocessing data and selecting appropriate hyperparameters are critical for successful model training.
+
+```python
 from sklearn.linear_model import LogisticRegression
 
 logreg = LogisticRegression()
 logreg.fit(X_train, y_train)
 ```
 
-
-
-
-
-### Step8. Model Training
-
-Model training is the process of adjusting a machine learning model's parameters to fit the training data and make predictions. It involves data preparation, model selection, initialization, training, validation, evaluation, and fine-tuning. The goal is to minimize the loss function and improve the model's ability to generalize to new data. Preprocessing data and selecting appropriate hyperparameters are critical for successful model training.
-
-
-
-
-
-### Step9. Evaluation
+### Step8. Evaluation
 
 Evaluation assesses the performance of a machine learning model on new data. Metrics like accuracy, precision, recall, F1-score, AUC-ROC, MSE, and MAE are used to evaluate a model's performance. The dataset is split into training, validation, and test sets. Choosing an appropriate metric and tuning hyperparameters are crucial for successful evaluation.
 
+```python
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
+predict = logreg.predict(X_test)
 
-```
-from sklearn.metrics import accuracy_score
+accuracy = accuracy_score(y_test, predict)
+precision = precision_score(y_test, predict)
+recall = recall_score(y_test, predict)
+f1 = f1_score(y_test, predict)
 
-y_pred = logreg.predict(X_test)
-print('Accuracy:', accuracy_score(y_test, y_pred))
-```
-
-
-
-```
-test_df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin'], axis=1, inplace=True)
-
-test_df['Age'].fillna(test_df['Age'].mean(), inplace=True)
-test_df['Fare'].fillna(test_df['Fare'].mean(), inplace=True)
-
-sex = pd.get_dummies(test_df['Sex'], drop_first=True)
-embark = pd.get_dummies(test_df['Embarked'], drop_first=True)
-
-test_df.drop(['Sex', 'Embarked'], axis=1, inplace=True)
-test_df = pd.concat([test_df, sex, embark], axis=1)
+print("Accuracy: {:.2f}".format(accuracy))
+print("Precision: {:.2f}".format(precision))
+print("Recall: {:.2f}".format(recall))
+print("F1 Score: {:.2f}".format(f1))
 ```
 
+> Accuracy: 0.71
+> Precision: 0.72
+> Recall: 0.45
+> F1 Score: 0.55
 
+### Step9. Hyperparameter Tuning
+
+Hyperparameter tuning finds the optimal set of hyperparameters for a machine learning model, which control the model's behavior during training. Examples of hyperparameters include learning rate, regularization strength, and number of layers/neurons. Hyperparameter tuning can be done through methods like grid search, random search, Bayesian optimization, and genetic algorithms. Successful tuning involves careful selection of hyperparameter range, appropriate search method, and evaluation on a validation set to avoid overfitting. Computational resources should also be considered.
+
+```
+from sklearn.model_selection import GridSearchCV
+
+hyperparameters = {
+    'penalty': ['l1', 'l2'],
+    'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    'solver': ['liblinear', 'saga']
+}
+
+grid = GridSearchCV(logreg, hyperparameters, cv=5)
+grid.fit(X_train, y_train)
+
+tuning_predict = grid.predict(X_test)
+tuning_accuracy = accuracy_score(y_test, tuning_predict)
+tuning_precision = precision_score(y_test, tuning_predict)
+tuning_recall = recall_score(y_test, tuning_predict)
+tuning_f1 = f1_score(y_test, tuning_predict)
+
+print("Accuracy: {:.2f}".format(tuning_accuracy))
+print("Precision: {:.2f}".format(tuning_precision))
+print("Recall: {:.2f}".format(tuning_recall))
+print("F1 Score: {:.2f}".format(tuning_f1))
+```
+
+### Step10. Model Deployment
 
 ```
 test_pred = logreg.predict(test_df)
@@ -298,23 +339,3 @@ submission = pd.DataFrame({
 
 submission.to_csv('submission.csv', index=False)
 ```
-
-
-
-### Step10. Hyperparameter Tuning
-
-Hyperparameter tuning finds the best hyperparameters for a machine learning model. Hyperparameters control the model's behavior during training and can affect its performance on new data. Examples include learning rate and the number of hidden layers. Tuning can be done through grid search, random search, Bayesian optimization, or genetic algorithms. Success depends on choosing appropriate ranges, search methods, and evaluation on a validation set to avoid overfitting, while considering computational resources.
-
-
-
-### Step11. Model Deployment
-
-Model deployment is making a machine learning model available for production use. It can be done by packaging the model in a container and deploying it to a cloud platform, integrating it into an existing system, or exposing it as an API. Monitoring the model's performance is also important to ensure its continued accuracy and value.
-
-
-
-
-
-### Step12. Monitoring and Maintenance
-
-Model deployment requires continuous monitoring and maintenance to ensure optimal performance. Performance metrics such as accuracy, precision, recall, and F1 score should be tracked to detect degradation in model performance. Maintenance may involve updating the model with new data, algorithms, hyperparameters, or architecture. Versioning is also important for debugging and reproducibility. Monitoring and maintenance are essential for maximizing the value of machine learning models in a changing environment.
