@@ -13,6 +13,8 @@ In this project, we plan to build a model step by step to predict the life condi
 
 This challenge has been published on the Kaggle website. [see this challenge on Kaggle](https://www.kaggle.com/competitions/titanic/overview)
 
+[Kaggle Notebook](https://www.kaggle.com/arashyeganeh/titanic-predicting-survival)
+
 ## The goal of the challenge
 
 Predicting the status of passengers in terms of whether they are alive or dead.
@@ -392,3 +394,4 @@ submission.to_csv('submission.csv', index=False)
 
 ![](https://img.shields.io/badge/Score-0.77033-31bfe2)
 
+[Kaggle Notebook](https://www.kaggle.com/arashyeganeh/titanic-predicting-survival)
