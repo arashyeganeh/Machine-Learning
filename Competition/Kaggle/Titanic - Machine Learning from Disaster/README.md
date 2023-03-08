@@ -2,17 +2,16 @@
 
 <p>
     <img src="https://img.shields.io/badge/Kaggle-blue">
-    <img src="https://img.shields.io/badge/Python-1E90FF?logo=python&logoColor=white">
-    <img src="https://img.shields.io/badge/Pandas-696969?logo=pandas&logoColor=white">
-    <img src="https://img.shields.io/badge/Accuracy-%200.8065%20-31bfe2">
+    <img alt="python" src="https://img.shields.io/badge/Python-1E90FF?logo=python&logoColor=white">
+    <img alt="pandas" src="https://img.shields.io/badge/-Pandas-fcdeef?logo=pandas&logoColor=E00484"/>
+    <img src="https://img.shields.io/badge/Score-0.77033-31bfe2">
 </p>
-# The Titanic Dataset: A Step-by-Step Guide to Predicting Survival | Kaggle | 💀 😀
+
+# The Titanic Dataset: A Step-by-Step Guide to Predicting Survival | 0.77033
 
 In this project, we plan to build a model step by step to predict the life conditions of other passengers with the help of machine learning.
 
 This challenge has been published on the Kaggle website. [see this challenge on Kaggle](https://www.kaggle.com/competitions/titanic/overview)
-
-
 
 ## The goal of the challenge
 
@@ -72,7 +71,7 @@ Some children travelled only with a nanny, therefore parch=0 for them.
 * Install libraries required by this project using pip.
 
   ```bash
-  pip install pandas seaborn scikit-learn lazypredict
+  pip install pandas seaborn matplotlib scikit-learn
   ```
 
 ## Let's Do it 💪
@@ -98,8 +97,6 @@ test = pd.read_csv('test.csv')
 Data exploration is the crucial step of analyzing and understanding a dataset to identify patterns, relationships, and trends. It involves summarizing, visualizing, feature engineering, hypothesis testing, and identifying data quality issues. This iterative process helps ensure the data is properly understood and prepared for building more accurate and effective machine learning models.
 
 By using `info()` I can find out how many columns there are, and what their data types are.
-
-> 📚 seaborn: for data visualization
 
 ```python
 train.info()
@@ -161,6 +158,10 @@ train.head()
 
 ![](img/train_df.head.PNG)
 
+❔ How many people died?
+
+> 📚 seaborn: for data visualization
+
 ```python
 import seaborn as sns
 sns.countplot(x='Survived', data=train)
@@ -173,6 +174,28 @@ sns.countplot(x='Survived', hue='Sex', data=train)
 ```
 
 ![](img/countplot_survived_sex.PNG)
+
+The age of the people in the ticket class
+
+> 📚 matplotlib: for data visualization
+
+```python
+import matplotlib.pyplot as plt
+plt.figure(figsize=(12, 7))
+sns.boxplot(x='Pclass',y='Age',data=train,palette='winter')
+```
+
+![](img/boxplot_age_pclass.PNG)
+
+Embarkation of people at various ports and the impact on their survival
+
+```python
+sns.countplot(x='Survived', hue='Embarked', data=train)
+```
+
+![](img/countplot_survived_embarked.PNG)
+
+
 
 | **Column**  | **Missing values** |                         **Describe**                         | Action |
 | :---------: | :----------------: | :----------------------------------------------------------: | :----: |
@@ -198,45 +221,66 @@ sns.countplot(x='Survived', hue='Sex', data=train)
 Data cleaning is the process of identifying and correcting errors, inconsistencies, and inaccuracies in a dataset. It involves identifying missing data, removing duplicates, standardizing data, correcting errors, handling outliers, and ensuring data consistency. This iterative process is crucial for ensuring the accuracy and performance of machine learning models.
 
 ```python
-def DropUselessCol(df):
-    df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin', 'Embarked'], axis=1, inplace=True)
-
-def FillnaAge(df):
+def CleanData(df, ignorePassengerId = False):
     df['Age'].fillna(df['Age'].mean(), inplace=True)
+    df['Fare'].fillna(df['Fare'].mean(), inplace=True)
     
-def CleanData(df):
-    DropUselessCol(df)
-    FillnaAge(df)
+    if ignorePassengerId :
+        df.drop(['Name', 'Ticket', 'Cabin', 'Embarked'], axis=1, inplace=True)
+    else:
+        df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin', 'Embarked'], axis=1, inplace=True)
     
 CleanData(train)
+CleanData(test, ignorePassengerId = True)
+```
+
+```python
 train.head()
 ```
 
-![](img/data_cleaning.PNG)
+![](img/data_cleaning_train.PNG)
+
+```python
+test.head()
+```
+
+![](img/data_cleaning_test.PNG)
+
+
 
 ### Step4. Feature Engineering & Data Preprocessing
 
 Feature engineering is the process of selecting and transforming features in a dataset to create new, more meaningful features that improve the performance of machine learning models. This involves feature selection, extraction, scaling, encoding, and dimensionality reduction. It's an iterative process that can improve the accuracy and effectiveness of machine learning models.
 
 ```python
-def convertToNumeric(df):
+def castColToInt(df, name):
+    df[name] = df[name].astype(int)
+    return df
+    
+def FeatureEngineering(df):
     sex = pd.get_dummies(df['Sex'], drop_first=True)
     df.drop(['Sex'], axis=1, inplace=True)
     df = pd.concat([df, sex], axis=1)
-
-def castColToInt(df, name):
-    df[name] = df[name].astype(int)
     
-def FeatureEngineering(df):
-    convertToNumeric(df)
     castColToInt(df, 'Age')
     castColToInt(df, 'Fare')
+    return df
     
-FeatureEngineering(train)
-print(train)
+train = FeatureEngineering(train)
+test = FeatureEngineering(test)
 ```
 
-![](img/feature_engineering.PNG)
+```python
+train.head()
+```
+
+![](img/feature_engineering_train.PNG)
+
+```python
+test.head()
+```
+
+![](img/feature_engineering_test.PNG)
 
 ### Step5. Data Splitting
 
@@ -250,18 +294,30 @@ Data splitting is a crucial step in machine learning that divides the dataset in
 
 ```python
 from sklearn.model_selection import train_test_split
-
-X = train_df.drop('Survived', axis=1)
-y = train_df['Survived']
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+X = train.drop('Survived', axis=1)
+y = train['Survived']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.35, random_state=42)
 ```
 
 ### Step6. Model Selection
 
 Model selection is about selecting the best machine learning model for a problem, considering the model architecture, hyperparameters, and optimization algorithm. Different machine learning models, such as decision trees, support vector machines, and neural networks, have their strengths and weaknesses. Model selection involves defining the problem, selecting a performance metric, choosing candidate models, splitting the data, training and evaluating models, selecting the best model based on the validation set, fine-tuning the selected model, and optimizing its performance. It is crucial to choose a model that is suitable for the problem and can generalize well to new data.
 
-[Documentation: lazypredict](https://lazypredict.readthedocs.io/en/latest/)
+
+
+in this article, I use the `Logistic Regression` algorithm.
+
+> You can use this library from GitHub to quickly benchmark in multiple algorithms
+>
+> ```bash
+> pip install lazypredict
+> ```
+>
+> [GitHub: lazypredict](https://github.com/shankarpandala/lazypredict)
+>
+> [Documentation: lazypredict](https://lazypredict.readthedocs.io/en/latest/)
+
+
 
 ### Step7. Model Training
 
@@ -269,9 +325,8 @@ Model training is the process of adjusting a machine learning model's parameters
 
 ```python
 from sklearn.linear_model import LogisticRegression
-
-logreg = LogisticRegression()
-logreg.fit(X_train, y_train)
+logistReg = LogisticRegression(max_iter=1000)
+logistReg.fit(X_train, y_train)
 ```
 
 ### Step8. Evaluation
@@ -279,63 +334,61 @@ logreg.fit(X_train, y_train)
 Evaluation assesses the performance of a machine learning model on new data. Metrics like accuracy, precision, recall, F1-score, AUC-ROC, MSE, and MAE are used to evaluate a model's performance. The dataset is split into training, validation, and test sets. Choosing an appropriate metric and tuning hyperparameters are crucial for successful evaluation.
 
 ```python
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
-predict = logreg.predict(X_test)
-
-accuracy = accuracy_score(y_test, predict)
-precision = precision_score(y_test, predict)
-recall = recall_score(y_test, predict)
-f1 = f1_score(y_test, predict)
-
+from sklearn.metrics import accuracy_score
+prediction = logistReg.predict(X_test)
+accuracy = accuracy_score(y_test, prediction)
 print("Accuracy: {:.2f}".format(accuracy))
-print("Precision: {:.2f}".format(precision))
-print("Recall: {:.2f}".format(recall))
-print("F1 Score: {:.2f}".format(f1))
 ```
 
-> Accuracy: 0.71
-> Precision: 0.72
-> Recall: 0.45
-> F1 Score: 0.55
+> Accuracy: 0.81
 
 ### Step9. Hyperparameter Tuning
 
 Hyperparameter tuning finds the optimal set of hyperparameters for a machine learning model, which control the model's behavior during training. Examples of hyperparameters include learning rate, regularization strength, and number of layers/neurons. Hyperparameter tuning can be done through methods like grid search, random search, Bayesian optimization, and genetic algorithms. Successful tuning involves careful selection of hyperparameter range, appropriate search method, and evaluation on a validation set to avoid overfitting. Computational resources should also be considered.
 
-```
+```python
 from sklearn.model_selection import GridSearchCV
+import warnings
+
+warnings.filterwarnings('ignore')
 
 hyperparameters = {
-    'penalty': ['l1', 'l2'],
-    'C': [0.001, 0.01, 0.1, 1, 10, 100],
-    'solver': ['liblinear', 'saga']
+    'penalty': ['l1', 'l2', 'elasticnet'],
+    'C': [0.01, 0.1, 1, 10, 100],
+    'solver': ['lbfgs', 'liblinear', 'saga']
 }
 
-grid = GridSearchCV(logreg, hyperparameters, cv=5)
-grid.fit(X_train, y_train)
+gridSeCV = GridSearchCV(logistReg, hyperparameters, scoring='accuracy', cv=20)
+gridSeCV.fit(X_train, y_train)
 
-tuning_predict = grid.predict(X_test)
-tuning_accuracy = accuracy_score(y_test, tuning_predict)
-tuning_precision = precision_score(y_test, tuning_predict)
-tuning_recall = recall_score(y_test, tuning_predict)
-tuning_f1 = f1_score(y_test, tuning_predict)
+prediction = gridSeCV.predict(X_test)
+accuracy = accuracy_score(y_test, prediction)
 
-print("Accuracy: {:.2f}".format(tuning_accuracy))
-print("Precision: {:.2f}".format(tuning_precision))
-print("Recall: {:.2f}".format(tuning_recall))
-print("F1 Score: {:.2f}".format(tuning_f1))
+print('Best params', gridSeCV.best_params_)
+print('Best score', gridSeCV.best_score_)
+print("Accuracy: {:.2f}".format(accuracy))
 ```
 
-### Step10. Model Deployment
+>```python
+>Best params {'C': 1, 'penalty': 'l2', 'solver': 'liblinear'}
+>Best score 0.7981527093596059
+>Accuracy: 0.80
+>```
 
+### Step10. Predict
+
+![](img/predict.png)
+
+```python
+passengerId = test['PassengerId']
+test.drop(['PassengerId'], axis=1, inplace=True)
 ```
-test_pred = logreg.predict(test_df)
 
-submission = pd.DataFrame({
-    'PassengerId': pd.read_csv('test.csv')['PassengerId'],
-    'Survived': test_pred
-})
-
+```python
+prediction = gridSeCV.predict(test)
+submission = pd.DataFrame({'PassengerId': passengerId, 'Survived': prediction})
 submission.to_csv('submission.csv', index=False)
 ```
+
+![](https://img.shields.io/badge/Score-0.77033-31bfe2)
+
