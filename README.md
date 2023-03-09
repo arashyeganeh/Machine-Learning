@@ -59,7 +59,7 @@ If you share my passion for cutting-edge technology and are interested in explor
 
 ## Competition List
 
-|                                                              |                    Name                     |                     GitHub                      |                           Notebook                           |
-| :----------------------------------------------------------: | :-----------------------------------------: | :---------------------------------------------: | :----------------------------------------------------------: |
-| ![](W:\Machine-Learning\img\Competition\Titanic-Predicting-Survival.png) | Titanic - Predicting Survival \| **Kaggle** | [Link](/Competition/Titanic-PredictingSurvival) | [Link](https://www.kaggle.com/code/arashyeganeh/titanic-predicting-survival) |
+|                                                       |                    Name                     |                     GitHub                      |                           Notebook                           |
+| :---------------------------------------------------: | :-----------------------------------------: | :---------------------------------------------: | :----------------------------------------------------------: |
+| ![](/img/Competition/Titanic-Predicting-Survival.png) | Titanic - Predicting Survival \| **Kaggle** | [Link](/Competition/Titanic-PredictingSurvival) | [Link](https://www.kaggle.com/code/arashyeganeh/titanic-predicting-survival) |
 
