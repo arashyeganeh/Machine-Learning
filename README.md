@@ -5,6 +5,7 @@
 	<img alt="pytorch" src="https://img.shields.io/badge/-PyTorch-ffded8?logo=pytorch&logoColor=E74A2B"/>
 	<img alt="tensorflow" src="https://img.shields.io/badge/-TensorFlow-ffdbb5?logo=tensorflow&logoColor=F78100"/>
 	<img alt="pandas" src="https://img.shields.io/badge/-Pandas-fcdeef?logo=pandas&logoColor=E00484"/>
+    <img alt="jupyter" src="https://img.shields.io/badge/Jupyter-ededed?logo=jupyter&logoColor=F37726"/>
 	<img alt="Kaggle" src="https://img.shields.io/badge/-Kaggle-blue"/>
 </p>
 
@@ -54,8 +55,11 @@ If you share my passion for cutting-edge technology and are interested in explor
 
 * [Mastering the Machine Learning Process: A Comprehensive Step-by-Step Guide](blog/Mastering%20the%20Machine%20Learning%20Process%20A%20Comprehensive%20Step-by-Step%20Guide)
 
-
+  
 
 ## Competition List
 
-### [Kaggle](Competition/Kaggle)
+|                                                              |                    Name                     |                     GitHub                      |                           Notebook                           |
+| :----------------------------------------------------------: | :-----------------------------------------: | :---------------------------------------------: | :----------------------------------------------------------: |
+| ![](W:\Machine-Learning\img\Competition\Titanic-Predicting-Survival.png) | Titanic - Predicting Survival \| **Kaggle** | [Link](/Competition/Titanic-PredictingSurvival) | [Link](https://www.kaggle.com/code/arashyeganeh/titanic-predicting-survival) |
+

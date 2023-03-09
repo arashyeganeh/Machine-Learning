@@ -4,10 +4,11 @@
     <img src="https://img.shields.io/badge/Kaggle-blue">
     <img alt="python" src="https://img.shields.io/badge/Python-1E90FF?logo=python&logoColor=white">
     <img alt="pandas" src="https://img.shields.io/badge/-Pandas-fcdeef?logo=pandas&logoColor=E00484"/>
+    <img alt="jupyter" src="https://img.shields.io/badge/Jupyter-ededed?logo=jupyter&logoColor=F37726"/>
     <img src="https://img.shields.io/badge/Score-0.77033-31bfe2">
 </p>
 
-# The Titanic Dataset: A Step-by-Step Guide to Predicting Survival | 0.77033
+# Titanic | Predicting Survival | 0.77033
 
 In this project, we plan to build a model step by step to predict the life conditions of other passengers with the help of machine learning.
 
